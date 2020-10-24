@@ -9,6 +9,12 @@
 `sudo docker-composer down` (Остановка контейнеров) \
 `sudo docker-composer rm -fv` (Удаление контейнеров и предустановленных баз)
 
+Права \
+`docker-compose exec php bash` \
+`chmod 777 -R application/cache/` \
+`chmod 777 -R application/logs/` 
+
+
 Нужно импортировать базу для начала работы
 
 GET /api/users - All users
