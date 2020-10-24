@@ -24,10 +24,10 @@ class Model_User extends ORM
 
         if ($users !== null) {
             foreach ($users->as_array() as $key => $user) {
-                $users[$key] = $user->as_array();
+                $this->data[$key] = $user->as_array();
             }
 
-            return $users;
+            return $this->data;
         }
         return null;
     }
@@ -39,10 +39,10 @@ class Model_User extends ORM
      */
     public function one_user($id)
     {
-        $user = $this->where('id', '=', $id)->find();
+        $user = $this->where('id', '=', $id)->find()->as_array();
 
-        if ($user !== null) {
-            return $user->as_array();
+        if ($user['id'] !== null) {
+            return $user;
         }
 
         return null;

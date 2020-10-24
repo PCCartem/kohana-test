@@ -23,7 +23,7 @@ class Model_Domain extends Model
             ->as_array();;
 
         foreach ($domains as $domain) {
-            DB::insert('domains', array('name', 'count_users'))->values([$domain['domain'], $domain['count']])->execute();
+            DB::insert('domains', array('domain', 'count_users'))->values([$domain['domain'], $domain['count']])->execute();
         }
 
     }

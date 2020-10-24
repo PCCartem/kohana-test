@@ -60,7 +60,8 @@ class Controller_Api_User extends Controller
 
         if ($user === null) {
             $response = [
-                'status' => 'FAIL'
+                'status' => 'FAIL',
+                'message' => 'Юзер не найден'
             ];
         } else {
             $response = [
