@@ -1,0 +1,66 @@
+version: '3.5'
+services:
+  apache:
+    build: ./docker/apache
+    restart: always
+    ports:
+      - "6180:80"
+    depends_on:
+      - php
+      - postgres
+    volumes:
+      - ./application:/var/www/application
+    networks:
+      - backend
+  php:
+    build:
+      context: ./docker/php
+      args:
+        PHP_ENTRYPOINT_NAME: ${PHP_ENTRYPOINT_NAME}
+        PHP_CRON_NAME: ${PHP_CRON_NAME}
+    container_name: ${COMPOSE_PROJECT_NAME}_php
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - backend
+    volumes:
+      - ./application:/var/www/application
+    ports:
+      - "${PHP_PORT}:9000"
+  postgres:
+    build: ./docker/postgres
+    container_name: ${COMPOSE_PROJECT_NAME}_postgres
+    restart: always
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql
+      - ./docker/postgres/dumps:/tmp/dumps
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: ${DB_DATA}
+    networks:
+      - backend
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "${ADMINER_PORT}:8080"
+    networks:
+      - backend
+  gearman:
+    image: artefactual/gearmand:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_gearman
+    restart: always
+    ports:
+      - "${GEARMAN_PORT}:4730"
+    environment:
+      QUEUE_TYPE: builtin
+    networks:
+      - backend
+networks:
+  backend:
